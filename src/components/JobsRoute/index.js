@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {Component} from 'react'
 import Loader from 'react-loader-spinner'
 import Cookies from 'js-cookie'
@@ -99,7 +100,7 @@ class JobsRoute extends Component {
       method: 'GET',
     }
     const response = await fetch(
-      `https://apis.ccbp.in/jobshttps://apis.ccbp.in/jobs?employment_type=${checkedState.join}&minimum_package=${salaryRange}&search=${searchInput}`,
+      `https://apis.ccbp.in/jobshttps://apis.ccbp.in/jobs?employment_type=${checkedState.join()}&minimum_package=${salaryRange}&search=${searchInput}`,
       options,
     )
     if (response.ok) {
@@ -124,12 +125,15 @@ class JobsRoute extends Component {
     }
   }
 
-  handleOnChange = pos => {
+  handleOnChange = id => {
     const {checkedState} = this.state
-    const updatedCheckedList = checkedState.map((item, index) =>
-      index === pos ? !item : item,
-    )
-    this.setState({checkedState: updatedCheckedList})
+    if (checkedState.includes(id)) {
+      const updatedCheckedState = checkedState.filter(each => each !== id)
+      this.setState({checkedState: updatedCheckedState})
+    } else {
+      const updatedCheckedState = checkedState.push(id)
+      this.setState({checkedState: updatedCheckedState})
+    }
   }
 
   retryButtonPr = () => {
@@ -193,7 +197,7 @@ class JobsRoute extends Component {
       jobcompo = (
         <div>
           {jobsList.map(each => (
-            <JobItem details={each} />
+            <JobItem details={each} key={each.id} />
           ))}
         </div>
       )
@@ -221,7 +225,7 @@ class JobsRoute extends Component {
             <hr />
             <p>Type of Employment</p>
             <ul className="emplytype">
-              {employmentTypesList.map(({label, employmentTypeId}, index) => (
+              {employmentTypesList.map(({label, employmentTypeId}) => (
                 <li>
                   <div className="toppings-list-item">
                     <div className="left-section">
@@ -230,8 +234,8 @@ class JobsRoute extends Component {
                         id={employmentTypeId}
                         name={label}
                         value={employmentTypeId}
-                        checked={checkedState[index]}
-                        onChange={this.handleOnChange(index)}
+                        checked={checkedState.includes(employmentTypeId)}
+                        onChange={this.handleOnChange(employmentTypeId)}
                       />
                       <label htmlFor={employmentTypeId}>{label}</label>
                     </div>
@@ -266,7 +270,7 @@ class JobsRoute extends Component {
                 data-testid="searchButton"
                 onClick={this.getJobs}
               >
-                <BsSearch className="search-icon" />
+                Search
               </button>
             </div>
             {jobcompo}
