@@ -49,7 +49,6 @@ class JobsRoute extends Component {
     jobsList: [],
     isLoading: false,
     checkedState: [],
-    selectedCash: '',
     salaryRange: '',
     searchInput: '',
     fetchStatus: true,
@@ -74,11 +73,12 @@ class JobsRoute extends Component {
     const response2 = await fetch('https://apis.ccbp.in/profile', options)
     if (response2.ok) {
       const fetchedData = await response2.json()
-      const updatedData = fetchedData.products.map(product => ({
-        name: product.name,
-        profileImageUrl: product.profile_image_url,
-        shortBio: product.short_bio,
-      }))
+      console.log()
+      const updatedData = {
+        name: fetchedData.profile_details.name,
+        profileImageUrl: fetchedData.profile_details.profile_image_url,
+        shortBio: fetchedData.profile_details.short_bio,
+      }
       this.setState({
         profileDetails: updatedData,
         isLoading: false,
@@ -100,12 +100,12 @@ class JobsRoute extends Component {
       method: 'GET',
     }
     const response = await fetch(
-      `https://apis.ccbp.in/jobshttps://apis.ccbp.in/jobs?employment_type=${checkedState.join()}&minimum_package=${salaryRange}&search=${searchInput}`,
+      `https://apis.ccbp.in/jobs?employment_type=${checkedState.join()}&minimum_package=${salaryRange}&search=${searchInput}`,
       options,
     )
     if (response.ok) {
       const fetchedData = await response.json()
-      const updatedData = fetchedData.products.map(product => ({
+      const updatedData = fetchedData.jobs.map(product => ({
         companyLogoUrl: product.company_logo_url,
         employmentType: product.employment_type,
         jobDescription: product.job_description,
@@ -156,7 +156,6 @@ class JobsRoute extends Component {
       checkedState,
       searchInput,
       profileFetch,
-      selectedCash,
       fetchStatus,
     } = this.state
 
@@ -173,7 +172,7 @@ class JobsRoute extends Component {
       compo = (
         <div className="profileCard">
           <img src={profileDetails.profileImageUrl} alt="profile" />
-          <p>{profileDetails.name} </p>
+          <h1>{profileDetails.name} </h1>
           <p>{profileDetails.shortBio}</p>
         </div>
       )
@@ -223,10 +222,10 @@ class JobsRoute extends Component {
           <div className="sidebar">
             <div className="profile">{compo}</div>
             <hr />
-            <p>Type of Employment</p>
+            <h1>Type of Employment</h1>
             <ul className="emplytype">
               {employmentTypesList.map(({label, employmentTypeId}) => (
-                <li>
+                <li key={employmentTypeId}>
                   <div className="toppings-list-item">
                     <div className="left-section">
                       <input
@@ -235,7 +234,7 @@ class JobsRoute extends Component {
                         name={label}
                         value={employmentTypeId}
                         checked={checkedState.includes(employmentTypeId)}
-                        onChange={this.handleOnChange(employmentTypeId)}
+                        onChange={() => this.handleOnChange(employmentTypeId)}
                       />
                       <label htmlFor={employmentTypeId}>{label}</label>
                     </div>
@@ -244,14 +243,14 @@ class JobsRoute extends Component {
               ))}
             </ul>
             <hr />
-            <p>Salary Range</p>
+            <h1>Salary Range</h1>
             <ul>
               {salaryRangesList.map(({salaryRangeId, label}) => (
-                <li>
+                <li key={salaryRangeId}>
                   <div onChange={this.onRadio}>
                     <input type="radio" value={salaryRangeId} name="gender" />
 
-                    {label}
+                    <label>{label}</label>
                   </div>
                 </li>
               ))}
@@ -263,7 +262,7 @@ class JobsRoute extends Component {
                 placeholder="Search"
                 onChange={this.onInput}
                 value={searchInput}
-                type="text"
+                type="search"
               />
               <button
                 type="button"

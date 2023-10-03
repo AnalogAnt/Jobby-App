@@ -20,7 +20,7 @@ const JobItem = props => {
         <div className="topcon">
           <img src={companyLogoUrl} alt="company logo" />
           <div className="title-con">
-            <p>{title}</p>
+            <h1>{title}</h1>
             <p>{rating}</p>
           </div>
         </div>
@@ -33,7 +33,7 @@ const JobItem = props => {
         </div>
         <hr />
         <div className="discon">
-          <p>Description</p>
+          <h1>Description</h1>
           <p>{jobDescription}</p>
         </div>
       </div>
