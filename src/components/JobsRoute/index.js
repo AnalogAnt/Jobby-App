@@ -127,13 +127,23 @@ class JobsRoute extends Component {
 
   handleOnChange = id => {
     const {checkedState} = this.state
+    let updatedCheckedState
+
     if (checkedState.includes(id)) {
-      const updatedCheckedState = checkedState.filter(each => each !== id)
-      this.setState({checkedState: updatedCheckedState})
+      updatedCheckedState = checkedState.filter(each => each !== id)
     } else {
-      const updatedCheckedState = checkedState.push(id)
-      this.setState({checkedState: updatedCheckedState})
+      updatedCheckedState = [...checkedState, id]
     }
+
+    this.setState({checkedState: updatedCheckedState}, () => {
+      this.getJobs()
+    })
+  }
+
+  onRadio = id => {
+    this.setState({salaryRange: id}, () => {
+      this.getJobs()
+    })
   }
 
   retryButtonPr = () => {
@@ -207,7 +217,7 @@ class JobsRoute extends Component {
             src="https://assets.ccbp.in/frontend/react-js/failure-img.png"
             alt="failure view"
           />
-          <p>Oops! Something Went Wrong</p>
+          <h1>Oops! Something Went Wrong</h1>
           <p>We cannot seem to find the page you are looking for.</p>
           <button onClick={this.retryButtonJb} type="button">
             Retry
@@ -247,10 +257,11 @@ class JobsRoute extends Component {
             <ul>
               {salaryRangesList.map(({salaryRangeId, label}) => (
                 <li key={salaryRangeId}>
-                  <div onChange={this.onRadio}>
-                    <input type="radio" value={salaryRangeId} name="gender" />
-
-                    <label>{label}</label>
+                  <div onChange={() => this.onRadio(salaryRangeId)}>
+                    <label>
+                      <input type="radio" value={salaryRangeId} name="gender" />
+                      {label}
+                    </label>
                   </div>
                 </li>
               ))}
