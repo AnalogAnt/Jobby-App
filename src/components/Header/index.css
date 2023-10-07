@@ -1,5 +1,19 @@
+.list-con {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 .nav-content {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
+  gap: 20px;
+}
+.logout-desktop-btn {
+  margin: 50px;
+}
+.logo {
+  height: 100px;
+  width: 100px;
 }

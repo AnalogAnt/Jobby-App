@@ -1,9 +1,10 @@
 import {Component} from 'react'
 import {Redirect} from 'react-router-dom'
 import Cookies from 'js-cookie'
+import './index.css'
 
 class Login extends Component {
-  state = {username: '', password: '', showSubmitErr: false, errorMsg: ''}
+  state = {username: '', password: ''}
 
   onChangeUsername = event => {
     this.setState({username: event.target.value})
@@ -26,14 +27,10 @@ class Login extends Component {
   onFormSubmit = async event => {
     event.preventDefault()
     const {username, password} = this.state
-    const userDetails = {username, password}
-    const options = {method: 'POST', body: JSON.stringify(userDetails)}
-    const response = await fetch('https://apis.ccbp.in/login', options)
-    const data = await response.json()
-    if (response.ok === true) {
-      this.onSubmitSucc(data.jwt_token)
+    if (username === 'hacksters' && password === 'hacksters123') {
+      this.onSubmitSucc('1234')
     } else {
-      this.onSubmitFail(data.error_msg)
+      this.onSubmitFail('Invalid')
     }
   }
 
@@ -46,10 +43,7 @@ class Login extends Component {
     return (
       <div className="bg-con">
         <form className="loginCard" onSubmit={this.onFormSubmit}>
-          <img
-            src="https://assets.ccbp.in/frontend/react-js/logo-img.png"
-            alt="website logo"
-          />
+          <img src="edupath.PNG" alt="website logo" className="logo" />
           <label className="lable">
             USERNAME
             <input
